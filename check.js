@@ -1,23 +1,4 @@
-FROM mcr.microsoft.com/playwright:v1.45.0-jammy
 
-WORKDIR /app
-COPY . .
-
-RUN npm install
-
-CMD ["node", "check.js"]
-{
-  "name": "visa-checker",
-  "version": "1.0.0",
-  "main": "check.js",
-  "scripts": {
-    "start": "node check.js"
-  },
-  "dependencies": {
-    "playwright": "^1.0.0",
-    "nodemailer": "^6.9.0"
-  }
-}
 
 
 const { chromium } = require('playwright');
