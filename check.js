@@ -1,6 +1,6 @@
 console.log('SCRIPT STARTED');
 
-const EMAIL = sofo.sialia@gmail.com;
+const EMAIL = sofo.salia@gmail.com;
 
 async function sendEmail() {
   try {
@@ -14,7 +14,7 @@ async function sendEmail() {
       },
       body: JSON.stringify({
         from: 'onboarding@resend.dev',
-        to: [sofo.sialia@gmail.com],
+        to: [sofo.salia@gmail.com],
         subject: 'TEST EMAIL',
         html: '<strong>This is a test email</strong>'
       })
