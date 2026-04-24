@@ -77,12 +77,8 @@ const checkSlots = async () => {
       }
     }
 
-    if (validSlotFound) {
-      console.log('🎉 SLOT FOUND');
-      await sendEmail();
-    } else {
-      console.log('No slots yet');
-    }
+    console.log('TEST EMAIL TRIGGER');
+await sendEmail();
 
   } catch (err) {
     console.error('ERROR:', err);
