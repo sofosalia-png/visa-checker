@@ -5,20 +5,30 @@ const EMAIL = process.env.EMAIL;
 const PASSWORD = process.env.PASSWORD;
 
 const sendEmail = async () => {
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: EMAIL,
-      pass: PASSWORD
-    }
-  });
+  try {
+    console.log('Sending email...');
 
-  await transporter.sendMail({
-    from: EMAIL,
-    to: EMAIL,
-    subject: '🚨 Visa slot available!',
-    text: 'There is an appointment available before July!'
-  });
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
+      auth: {
+        user: EMAIL,
+        pass: PASSWORD
+      }
+    });
+
+    await transporter.sendMail({
+      from: EMAIL,
+      to: EMAIL,
+      subject: '🚨 Visa slot available!',
+      text: 'There is an appointment available before July!'
+    });
+
+    console.log('Email sent');
+  } catch (e) {
+    console.error('Email error:', e);
+  }
 };
 
 const checkSlots = async () => {
@@ -30,6 +40,7 @@ const checkSlots = async () => {
 
     await page.waitForSelector('text=Team');
 
+    // select 1 person
     await page.evaluate(() => {
       document.querySelectorAll('input').forEach(input => {
         if (input.value === '0') {
@@ -48,13 +59,25 @@ const checkSlots = async () => {
 
     await page.waitForURL('**/suggest');
 
-    const content = await page.content();
+    // ONLY check actual clickable slots
+    const buttons = await page.locator('button').all();
 
-    if (
-      content.includes('April') ||
-      content.includes('Mai') ||
-      content.includes('Juni')
-    ) {
+    let validSlotFound = false;
+
+    for (const btn of buttons) {
+      const text = await btn.innerText().catch(() => '');
+
+      if (
+        text.includes('April') ||
+        text.includes('Mai') ||
+        text.includes('Juni')
+      ) {
+        validSlotFound = true;
+        break;
+      }
+    }
+
+    if (validSlotFound) {
       console.log('🎉 SLOT FOUND');
       await sendEmail();
     } else {
@@ -71,6 +94,6 @@ const checkSlots = async () => {
 (async () => {
   while (true) {
     await checkSlots();
-    await new Promise(r => setTimeout(r, 2 * 60 * 1000)); // every 2 minutes
+    await new Promise(r => setTimeout(r, 120000)); // every 2 minutes
   }
 })();
