@@ -6,21 +6,24 @@ async function sendEmail() {
   try {
     console.log('Sending email via Resend...');
 
-    await fetch('https://api.resend.com/emails', {
+    const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        from: 'Visa Checker <onboarding@resend.dev>',
-        to: [EMAIL],
+        from: 'onboarding@resend.dev',
+        to: [process.env.EMAIL],
         subject: 'TEST EMAIL',
         html: '<strong>This is a test email</strong>'
       })
     });
 
-    console.log('Email sent');
+    const data = await response.json();
+
+    console.log('Resend response:', data);
+
   } catch (e) {
     console.error('Email error:', e);
   }
