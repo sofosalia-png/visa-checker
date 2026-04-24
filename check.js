@@ -1,28 +1,24 @@
 const { chromium } = require('playwright');
-const nodemailer = require('nodemailer');
+const fetch = require('node-fetch');
 
 const EMAIL = process.env.EMAIL;
-const PASSWORD = process.env.PASSWORD;
 
 const sendEmail = async () => {
   try {
-    console.log('Sending email...');
+    console.log('Sending email via Resend...');
 
-    const transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 465,
-      secure: true,
-      auth: {
-        user: EMAIL,
-        pass: PASSWORD
-      }
-    });
-
-    await transporter.sendMail({
-      from: EMAIL,
-      to: EMAIL,
-      subject: '🚨 Visa slot available!',
-      text: 'There is an appointment available before July!'
+    await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: 'Visa Checker <onboarding@resend.dev>',
+        to: [EMAIL],
+        subject: '🚨 Visa slot available!',
+        html: '<strong>There is an appointment available before July!</strong>'
+      })
     });
 
     console.log('Email sent');
