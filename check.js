@@ -1,6 +1,6 @@
 console.log('SCRIPT STARTED');
 
-const EMAIL = process.env.EMAIL;
+const EMAIL = sofo.sialia@gmail.com;
 
 async function sendEmail() {
   try {
