@@ -14,7 +14,7 @@ async function sendEmail() {
       },
       body: JSON.stringify({
         from: 'onboarding@resend.dev',
-        to: [process.env.EMAIL],
+        to: [sofo.sialia@gmail.com],
         subject: 'TEST EMAIL',
         html: '<strong>This is a test email</strong>'
       })
