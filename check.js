@@ -86,8 +86,17 @@ const checkSlots = async () => {
 };
 
 (async () => {
+  console.log('SCRIPT STARTED');
+
   while (true) {
-    await checkSlots();
-    await new Promise(r => setTimeout(r, 120000)); // every 2 minutes
+    console.log('RUNNING CHECK');
+
+    try {
+      await checkSlots();
+    } catch (e) {
+      console.error('CHECK FAILED:', e);
+    }
+
+    await new Promise(r => setTimeout(r, 120000));
   }
 })();
