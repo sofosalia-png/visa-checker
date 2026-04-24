@@ -1,3 +1,4 @@
+console.log('SCRIPT STARTED');
 const { chromium } = require('playwright');
 
 const EMAIL = process.env.EMAIL;
