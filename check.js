@@ -1,5 +1,4 @@
 const { chromium } = require('playwright');
-const fetch = require('node-fetch');
 
 const EMAIL = process.env.EMAIL;
 
@@ -73,8 +72,10 @@ const checkSlots = async () => {
       }
     }
 
-    console.log('TEST EMAIL TRIGGER');
-await sendEmail();
+    const checkSlots = async () => {
+  console.log('TEST: sending email...');
+  await sendEmail();
+};
 
   } catch (err) {
     console.error('ERROR:', err);
