@@ -29,22 +29,26 @@ async function sendEmail() {
 }
 
 async function checkSlots() {
-const browser = await chromium.launch({
-  args: ['--no-sandbox'],
-  timeout: 30000
-});
+  const browser = await chromium.launch({
+    args: ['--no-sandbox'],
+    timeout: 60000
+  });
+
   const page = await browser.newPage();
-  page.setDefaultTimeout(30000);
-page.setDefaultNavigationTimeout(30000);
+
+  page.setDefaultTimeout(60000);
+  page.setDefaultNavigationTimeout(60000);
 
   try {
     console.log('Checking slots...');
 
-    await page.goto('https://tevis.ekom21.de/fra/select2?md=35');
+    await page.goto('https://tevis.ekom21.de/fra/select2?md=35', {
+      waitUntil: 'domcontentloaded'
+    });
 
     await page.waitForSelector('text=Team');
 
-    // set 1 person
+    // Set number of persons to 1
     await page.evaluate(() => {
       document.querySelectorAll('input').forEach(input => {
         if (input.value === '0') {
@@ -58,10 +62,15 @@ page.setDefaultNavigationTimeout(30000);
     await page.waitForTimeout(1000);
 
     await page.getByRole('button', { name: 'Weiter' }).click();
+
     await page.getByRole('button', { name: 'OK' }).click();
+
     await page.getByRole('button', { name: 'Weiter' }).click();
 
-    await page.waitForURL('**/suggest');
+    await Promise.race([
+      page.waitForURL('**/suggest'),
+      page.waitForSelector('button')
+    ]);
 
     const buttons = await page.locator('button').all();
 
@@ -70,9 +79,10 @@ page.setDefaultNavigationTimeout(30000);
     for (const btn of buttons) {
       const text = await btn.innerText().catch(() => '');
 
-      // must contain BOTH month and time → avoids false positives
       if (
-        (text.includes('April') || text.includes('Mai') || text.includes('Juni')) &&
+        (text.includes('April') ||
+         text.includes('Mai') ||
+         text.includes('Juni')) &&
         text.match(/\d{1,2}:\d{2}/)
       ) {
         found = true;
