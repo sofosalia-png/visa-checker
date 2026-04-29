@@ -36,7 +36,7 @@ async function checkSlots() {
 
   const page = await browser.newPage();
 
-  page.setDefaultTimeout(60000);
+  page.setDefaultTimeout(90000);
   page.setDefaultNavigationTimeout(60000);
 
   try {
