@@ -31,13 +31,13 @@ async function sendEmail() {
 async function checkSlots() {
   const browser = await chromium.launch({
     args: ['--no-sandbox'],
-    timeout: 60000
+    timeout: 300000
   });
 
   const page = await browser.newPage();
 
-  page.setDefaultTimeout(90000);
-  page.setDefaultNavigationTimeout(60000);
+  page.setDefaultTimeout(300000);
+  page.setDefaultNavigationTimeout(300000);
 
   try {
     console.log('Checking slots...');
