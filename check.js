@@ -16,7 +16,12 @@ async function sendEmail() {
         from: 'onboarding@resend.dev',
         to: [EMAIL],
         subject: '🚨 Appointment Found!',
-        html: '<strong>There is a visa appointment available before July.</strong>',
+        html:  `
+        <strong>There is a visa appointment available before July.</strong><br><br>
+  <a href="https://tevis.ekom21.de/fra/select2?md=35">
+    Open Frankfurt Appointment Page
+  </a>
+`,
       }),
     });
 
@@ -89,7 +94,7 @@ async function checkSlots() {
       }
     }
 
-    if (true) {
+    if (found) {
       console.log('🎉 REAL SLOT FOUND');
       await sendEmail();
     } else {
