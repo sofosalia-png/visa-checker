@@ -29,17 +29,19 @@ async function sendEmail() {
 }
 
 async function checkSlots() {
-  const browser = await chromium.launch({
-    args: ['--no-sandbox'],
-    timeout: 300000
-  });
-
-  const page = await browser.newPage();
-
-  page.setDefaultTimeout(300000);
-  page.setDefaultNavigationTimeout(300000);
+  let browser;
 
   try {
+    browser = await chromium.launch({
+      args: ['--no-sandbox'],
+      timeout: 300000
+    });
+
+    const page = await browser.newPage();
+
+    page.setDefaultTimeout(300000);
+    page.setDefaultNavigationTimeout(300000);
+
     console.log('Checking slots...');
 
     await page.goto('https://tevis.ekom21.de/fra/select2?md=35', {
@@ -48,7 +50,6 @@ async function checkSlots() {
 
     await page.waitForSelector('text=Team');
 
-    // Set number of persons to 1
     await page.evaluate(() => {
       document.querySelectorAll('input').forEach(input => {
         if (input.value === '0') {
@@ -62,9 +63,7 @@ async function checkSlots() {
     await page.waitForTimeout(1000);
 
     await page.getByRole('button', { name: 'Weiter' }).click();
-
     await page.getByRole('button', { name: 'OK' }).click();
-
     await page.getByRole('button', { name: 'Weiter' }).click();
 
     await Promise.race([
@@ -99,11 +98,12 @@ async function checkSlots() {
 
   } catch (err) {
     console.error('ERROR:', err);
+  } finally {
+    if (browser) {
+      await browser.close();
+    }
   }
-
-  await browser.close();
 }
-
 (async () => {
   console.log('SCRIPT STARTED');
   await checkSlots();
