@@ -89,7 +89,7 @@ async function checkSlots() {
       }
     }
 
-    if (found) {
+    if (true) {
       console.log('🎉 REAL SLOT FOUND');
       await sendEmail();
     } else {
