@@ -106,9 +106,5 @@ async function checkSlots() {
 
 (async () => {
   console.log('SCRIPT STARTED');
-
-  while (true) {
-    await checkSlots();
-    await new Promise(r => setTimeout(r, 120000)); // every 2 min
-  }
+  await checkSlots();
 })();
